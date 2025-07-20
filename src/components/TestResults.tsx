@@ -85,36 +85,94 @@ const TestResults = ({ answers, onRestart }: TestResultsProps) => {
           </div>
         </Card>
 
-        {/* Cognitive Functions */}
+        {/* Function Order Analysis */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Actual Function Order */}
+          <Card className="glass-card shadow-xl">
+            <CardHeader>
+              <CardTitle className="text-xl text-white flex items-center">
+                <Brain className="w-6 h-6 ml-2 text-primary" />
+                ترتيب الوظائف حسب إجاباتك
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {result.actualFunctionOrder.map((func, index) => (
+                  <div key={func.function} className="p-3 bg-primary/10 rounded-lg border border-primary/20">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-primary">#{index + 1}</span>
+                      <div className="text-left">
+                        <p className="text-white font-medium">{func.name}</p>
+                        <p className="text-primary text-sm">نقاط: {func.score}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Theoretical Order */}
+          <Card className="glass-card shadow-xl">
+            <CardHeader>
+              <CardTitle className="text-xl text-white flex items-center">
+                <Target className="w-6 h-6 ml-2 text-accent" />
+                الترتيب النظري لنمط {result.type.split(' ')[0]}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="p-3 bg-accent/10 rounded-lg border border-accent/20">
+                  <h4 className="font-semibold text-accent mb-1">المهيمنة</h4>
+                  <p className="text-white text-sm">{result.theoreticalFunctionOrder.dominant}</p>
+                </div>
+                <div className="p-3 bg-accent/10 rounded-lg border border-accent/20">
+                  <h4 className="font-semibold text-accent mb-1">المساعدة</h4>
+                  <p className="text-white text-sm">{result.theoreticalFunctionOrder.auxiliary}</p>
+                </div>
+                <div className="p-3 bg-accent/10 rounded-lg border border-accent/20">
+                  <h4 className="font-semibold text-accent mb-1">الثالثة</h4>
+                  <p className="text-white text-sm">{result.theoreticalFunctionOrder.tertiary}</p>
+                </div>
+                <div className="p-3 bg-accent/10 rounded-lg border border-accent/20">
+                  <h4 className="font-semibold text-accent mb-1">الأدنى</h4>
+                  <p className="text-white text-sm">{result.theoreticalFunctionOrder.inferior}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Function Comparison */}
         <Card className="glass-card mb-8 shadow-xl">
           <CardHeader>
             <CardTitle className="text-xl text-white flex items-center">
-              <Brain className="w-6 h-6 ml-2 text-primary" />
-              الوظائف الإدراكية
+              <TrendingUp className="w-6 h-6 ml-2 text-green-400" />
+              مقارنة الترتيب الفعلي والنظري
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-3">
-                <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
-                  <h4 className="font-semibold text-primary mb-1">الوظيفة المهيمنة</h4>
-                  <p className="text-white text-sm">{result.dominantFunction}</p>
+            <div className="space-y-3">
+              {result.functionComparison.map((comp, index) => (
+                <div key={comp.function} className="p-4 bg-secondary/20 rounded-lg border border-secondary/30">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="text-white font-medium">{comp.name}</p>
+                      <p className="text-sm text-gray-300">
+                        فعلي: #{comp.actualRank} | نظري: #{comp.theoreticalRank}
+                      </p>
+                    </div>
+                    <div className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                      comp.difference === 0 ? 'bg-green-500/20 text-green-400' :
+                      Math.abs(comp.difference) === 1 ? 'bg-yellow-500/20 text-yellow-400' :
+                      'bg-red-500/20 text-red-400'
+                    }`}>
+                      {comp.difference === 0 ? 'مطابق' : 
+                       comp.difference > 0 ? `+${comp.difference}` : `${comp.difference}`}
+                    </div>
+                  </div>
                 </div>
-                <div className="p-4 bg-accent/10 rounded-lg border border-accent/20">
-                  <h4 className="font-semibold text-accent mb-1">الوظيفة المساعدة</h4>
-                  <p className="text-white text-sm">{result.auxiliaryFunction}</p>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="p-4 bg-secondary/30 rounded-lg border border-secondary/40">
-                  <h4 className="font-semibold text-secondary-foreground mb-1">الوظيفة الثالثة</h4>
-                  <p className="text-white text-sm">{result.tertiaryFunction}</p>
-                </div>
-                <div className="p-4 bg-muted/30 rounded-lg border border-muted/40">
-                  <h4 className="font-semibold text-muted-foreground mb-1">الوظيفة الأدنى</h4>
-                  <p className="text-white text-sm">{result.inferiorFunction}</p>
-                </div>
-              </div>
+              ))}
             </div>
           </CardContent>
         </Card>

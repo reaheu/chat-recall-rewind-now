@@ -34,7 +34,6 @@ const PersonalityTest = ({ onBack }: PersonalityTestProps) => {
   };
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
-  const estimatedTimeLeft = Math.ceil((questions.length - currentQuestion - 1) * 0.5); // 30 seconds per question
 
   if (showResults) {
     return <TestResults answers={answers} onRestart={() => {
@@ -69,12 +68,6 @@ const PersonalityTest = ({ onBack }: PersonalityTestProps) => {
             <span className="text-lg font-semibold">
               السؤال {currentQuestion + 1} من {questions.length}
             </span>
-            <div className="flex items-center">
-              <Clock className="w-4 h-4 ml-1" />
-              <span className="text-sm text-blue-200">
-                {estimatedTimeLeft} دقيقة متبقية تقريباً
-              </span>
-            </div>
           </div>
           <Progress 
             value={progress} 
